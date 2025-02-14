@@ -24,7 +24,6 @@
 # V mouse control double-click to make move (with timer)
 # V mouse control by dragging (only marking, no unmarking or making move, which can be done by clicking and double clicking or keys)
 # V extra information (real number of highest tile, calculation of marked tiles)
-# To implement (somewhat prioritized):
 # V local hiscore (top 10 with date) per user with nicer end if hiscore is beaten and handling largest number (decrease largest number to check)
 #    V save to file (json) in users datapath
 #    V read from file
@@ -34,7 +33,8 @@
 # V logo icon
 # ***** first showable version ******* V1.0
 # V look for installer. (pyinstaller, win advanced installer)
-# - put in github
+# V put in github
+# To implement (somewhat prioritized):
 # - make browser game (pygbag, replit.com?)
 # - lines connecting marked tiles, which makes it easier to unmark (see original game)
 # - help window (like test above, but more elaborated)
