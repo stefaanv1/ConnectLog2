@@ -127,7 +127,7 @@ class Gameplay:
                     elif event.key == pygame.K_y:
                         if self.reset:
                             self.reset = False
-                            hiscore.display()
+                            hiscore.add_score(self.calculate_score(), self.grid.get_highest_number())
                             self.__init__()
                             break
                         elif self.quit:
