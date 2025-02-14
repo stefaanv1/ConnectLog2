@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/**
+/__pycache__/*
+/build/**
+/dist/*
+/install/ConnectLog2.msi
+/install/ConnectLog2-cache/*
