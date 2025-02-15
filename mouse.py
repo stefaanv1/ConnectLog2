@@ -49,7 +49,7 @@ class MouseEventChecker:
             if self.timer1:
                 pygame.time.set_timer(self.single_click_timer, 0)
                 self.timer1 = False
-                pygame.time.set_timer(self.double_click_timer, 250)
+                pygame.time.set_timer(self.double_click_timer, 350)
                 self.timer2 = True
                 return self.Click.WAITING
             elif self.timer2:

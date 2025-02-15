@@ -95,6 +95,9 @@ class Gameplay:
                         self.status.set_text("reset? <y/n>")
                         self.reset = True;
                         break
+                    elif event.key == pygame.K_s and event.mod & pygame.KMOD_CTRL != 0:
+                        hiscore.display()
+                        break
 
                     # navigation keys (a-s-d-w, useful on qwerty and arrows, useful on full keyboards)
                     elif (event.key == pygame.K_w or event.key == pygame.K_UP) and self.active_tile_pos.y > self.grid.MIN_Y:

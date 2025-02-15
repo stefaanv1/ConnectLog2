@@ -6,6 +6,8 @@ import json
 from datetime import datetime
 import os
 
+# import replit # testing for maybe running the game on replit.com
+
 import pygame
 from config import Config
 
@@ -15,6 +17,9 @@ class Score:
     highest_tile: int
     user: str
     datetime: str
+
+#     ost = replit.ObjectStorage()
+#     b = ost.get_default_bucket()
 
     def to_json(self: Self):
         return { 'points': self.points, 'tile': self.highest_tile, 'user': self.user, 'datetime': self.datetime }
@@ -131,7 +136,7 @@ class HiScore:
         waiting = True
         while waiting:
             for event in pygame.event.get():
-                if event.type == pygame.KEYUP or event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                     waiting = False
 
 
