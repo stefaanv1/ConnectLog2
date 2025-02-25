@@ -2,7 +2,7 @@
 # also version for internal use (?)
 
 class Version(object):
-    PROGRAM_VERSION = 1.0
+    PROGRAM_VERSION = 1.1
 
 
 

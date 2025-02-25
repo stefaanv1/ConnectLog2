@@ -5,7 +5,7 @@ from enum import Enum
 
 import pygame
 
-from statuspane import Status
+from statuspane import StatusPane
 
 # from https://stackoverflow.com/a/36268899/104774
 class MouseEventChecker:
@@ -17,8 +17,8 @@ class MouseEventChecker:
         DRAG = 5
         DRAG_STOP = 6
         RIGHT_BUTTON = 7
-    def __init__(self: Self, status: Status):
-        self.status : Status = status
+    def __init__(self: Self, status: StatusPane):
+        self.status : StatusPane = status
         self.single_click_timer : pygame.event.Event = pygame.event.Event(pygame.USEREVENT + 10)
         self.double_click_timer : pygame.event.Event = pygame.event.Event(pygame.USEREVENT + 11)
         self.timer1: bool = False

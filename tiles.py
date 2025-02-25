@@ -43,21 +43,21 @@ class Tiles(object):
     
 class Tile(pygame.sprite.Sprite): 
     WIDTH = HEIGHT = 80
-    def __init__(self: Self, number: int, color: str, bg: str = "grey"): 
+    def __init__(self: Self, number: int, color: str):
         super().__init__() 
   
         self.color = color
         self.number = number
-        self.bg = bg
         self.highlighted = False
         self.marked = False
         self.image = pygame.Surface([Tile.WIDTH, Tile.HEIGHT]) 
-        self._draw_sprite()
+        self.__draw_sprite()
   
         self.rect = self.image.get_rect() 
 
     def get_number(self: Self) -> int:
         return self.number
+
     @staticmethod
     def update(*args, **kwargs):
         tile = args[0]
@@ -70,7 +70,7 @@ class Tile(pygame.sprite.Sprite):
             self.highlighted = False
         else: # State.TOGGLE
             self.highlighted = not self.highlighted
-        self._draw_sprite()
+        self.__draw_sprite()
 
     def mark(self: Self, state: TileState):
         if state == TileState.ON:
@@ -79,7 +79,7 @@ class Tile(pygame.sprite.Sprite):
             self.marked = False
         else: # State.TOGGLE
             self.marked = not self.marked
-        self._draw_sprite()
+        self.__draw_sprite()
 
     def is_marked(self: Self):
         return self.marked
@@ -87,9 +87,12 @@ class Tile(pygame.sprite.Sprite):
     def get_rect(self: Self) -> pygame.Rect:
         return self.rect
 
-    def _draw_sprite(self: Self):
-        self.image.fill(pygame.Color(self.bg))
-        pygame.draw.rect(self.image, self.color, pygame.Rect(0, 0, Tile.WIDTH, Tile.HEIGHT), width = 0, border_radius = 4) 
+    def __draw_sprite(self: Self):
+        # use unused color for transparency
+        unused_color = "grey20"
+        self.image.fill(pygame.Color(unused_color))
+        self.image.set_colorkey(unused_color)
+        pygame.draw.rect(self.image, self.color, pygame.Rect(0, 0, Tile.WIDTH, Tile.HEIGHT), width = 0, border_radius = 7) 
   
         font = pygame.font.Font(None, 60)
         text_color = pygame.Color("white") if not self.marked else pygame.Color("black")
@@ -98,7 +101,7 @@ class Tile(pygame.sprite.Sprite):
         self.image.blit(text, text_rect)
 
         if self.highlighted:
-            pygame.draw.rect(self.image, pygame.Color("white"), pygame.Rect(0, 0, Tile.WIDTH, Tile.HEIGHT), width = 2, border_radius = 4)
+            pygame.draw.rect(self.image, pygame.Color("white"), pygame.Rect(0, 0, Tile.WIDTH, Tile.HEIGHT), width = 2, border_radius = 7)
 
 
 

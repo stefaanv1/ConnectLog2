@@ -1,16 +1,17 @@
 # positions of tiles in the game, used by the game play
 
 from dataclasses import dataclass
-from itertools import filterfalse
-from xmlrpc.client import Boolean
 import pygame
 from typing import Dict, Self
 import random
-from copy import deepcopy, copy
 from functools import reduce
+import json
+import os
+
 
 from board import Board
-from tiles import TilePos
+from tiles import TilePos, Tiles
+from config import Config
 
 
 #to do: use Grid_Tile here and let board handle tile.Tile to separate model (gameplay, grid) from view (board, tiles, status_pane)
@@ -32,16 +33,25 @@ class Grid(object):
     TOTAL_TILES = (MAX_X + 1) * (MAX_Y + 1)
 
 
-    def __init__(self, max_tile: int, board: Board):
+    def __init__(self, board: Board):
         self.board: Board = board
         self.board.set_number_rows(Grid.NBR_ROWS)
         self.board.set_number_columns(Grid.NBR_COLUMNS)
         self.__tiles: PositionedTiles = PositionedTiles()
         
-        for i, pos in enumerate(self._iterate_tiles_pos()):
+        for i, pos in enumerate(self.__iterate_tiles_pos()):
             self.__tiles[pos] = None # random: actually playing
 
-    def refill(self: Self, in_min: int, in_max: int) -> None:
+    def to_json(self: Self):
+        return { 'tile-numbers': [ t.number for t in self ] }
+
+    def from_json(self: Self, js) -> None:
+        if len(js['tile-numbers']) == self.TOTAL_TILES:
+            for i, pos in enumerate(self.__iterate_tiles_pos()):
+                self.set_tile(pos, js['tile-numbers'][i])
+
+
+    def refill(self: Self, in_min: int, in_max: int, delay_ms: int) -> None:
         # first drop all tiles in the grid
         for y in range(self.MAX_Y,self.MIN_Y, -1):
             for x in range(self.MIN_X, self.MAX_X + 1):
@@ -49,16 +59,18 @@ class Grid(object):
                 if not self.get_tile(p):
                     self.drop_tile(p)
 
+        self.animation_wait(delay_ms)
+
         # then fill up the empty spaces
         for y in range(self.MAX_Y,self. MIN_Y - 1, -1):
             for x in range(self.MIN_X, self.MAX_X + 1):
                 p = TilePos(x, y)
                 if not self.get_tile(p):
-                    self.set_tile(p, random.randrange(in_min, in_max))
-                    # self.set_tile(p, 1 + y*self.MAX_Y + x)
+                    self.set_tile(p, random.randrange(in_min, in_max)) # actual game: random
+                    # self.set_tile(p, 1 + y*self.MAX_Y + x) # test fill all numbers sequentially, no moves possible
 
     def check_connections_possible_for_pos(self: Self, pos: TilePos) -> bool:
-        for n in self._iterate_neighbour_tiles(pos):
+        for n in self.__iterate_neighbour_tiles(pos):
             tile_n = self.get_tile(n)
             tile_pos = self.get_tile(pos)
             if tile_n and tile_pos:
@@ -68,7 +80,7 @@ class Grid(object):
 
 
     def check_connections_possible(self: Self) -> bool:
-        for p in self._iterate_tiles_pos():
+        for p in self.__iterate_tiles_pos():
             if self.check_connections_possible_for_pos(p):
                 return True
         return False
@@ -82,7 +94,7 @@ class Grid(object):
 
     def set_tile(self: Self, pos: TilePos, number: int) -> None:
     # def set_tile(self, new_pos, new_tile: Tile) -> None:
-        self.__tiles[pos] = GridTile(number);
+        self.__tiles[pos] = GridTile(number)
         self.board.set_tile(pos, number)
 
     def remove_tile(self: Self, pos: TilePos) -> None:
@@ -101,18 +113,23 @@ class Grid(object):
 
     # remove all tiles with number lower than the given number
     def remove_low_tiles(self: Self, low: int) -> None:
-        for p in self._iterate_tiles_pos():
+        for p in self.__iterate_tiles_pos():
             if self.get_tile(p).number < low:
                 self.remove_tile(p)
 
     def display_grid(self: Self) -> None:
         self.board.draw()
 
-    def _iterate_tiles_pos(self: Self):
+    def animation_wait(self: Self, delay_ms: int):
+        self.display_grid()
+        pygame.display.flip()
+        pygame.time.delay(delay_ms)
+
+    def __iterate_tiles_pos(self: Self):
         for i in range(self.TOTAL_TILES):
             yield TilePos(i % (self.MAX_X + 1), i // (self.MAX_X + 1))
 
-    def _iterate_neighbour_tiles(self: Self, pos: TilePos):
+    def __iterate_neighbour_tiles(self: Self, pos: TilePos):
         for x in range(pos.x - 1, pos.x + 2):
             for y in range(pos.y - 1, pos.y + 2):
                 n = TilePos(x, y)
@@ -130,3 +147,34 @@ class Grid(object):
     def __next__(self) -> GridTile:
         return self.__tiles[next(self.it)]
 
+    @staticmethod
+    def __get_filename() -> str:
+        Config.make_user_datapath()
+        return os.path.join(Config.get_user_datapath(), 'grid.json')
+
+    def read(self: Self) -> None:
+        p = self.__get_filename()
+        try:
+            with open(p, 'r') as f:
+                js = json.load(f)
+                self.from_json(js)
+        except (KeyError, ValueError):
+            self.__init__(self.board)
+            os.remove(p)
+        except FileNotFoundError:
+            pass # no file found, no board should be read in.
+
+
+    def write(self: Self) -> None:
+        p = self.__get_filename()
+        try:
+            with open(p, 'w') as f:
+                json.dump(self.to_json(), f)
+        except Exception as e:
+            print(e)
+
+    def remove_file(self: Self) -> None:
+        try:
+            os.remove(self.__get_filename())
+        except Exception:
+            pass # no real problem if file can't be removed. Probably already removed.

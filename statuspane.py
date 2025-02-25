@@ -28,7 +28,7 @@ class Status(pygame.sprite.Sprite):
         self.image.fill(pygame.Color(self.bg_color))
 
         font = pygame.font.Font(None, 30)
-        text: pygame.Surface = font.render(self.status_text, True, self.font_color)
+        text: pygame.Surface = font.render(self.status_text, True, "darkblue")
         text_rect: pygame.Rect = text.get_rect()
         text_rect.top = 2
         text_rect.left = 5
@@ -48,7 +48,7 @@ class Status(pygame.sprite.Sprite):
         text_rect.left = 5
         self.image.blit(text, text_rect)
 
-    def set_text(self: Self, text: str) -> None:
+    def set_message(self: Self, text: str) -> None:
         self.status_text = text
         self._draw_sprite()
 
@@ -70,8 +70,8 @@ class StatusPane:
     def draw(self: Self, surface: pygame.Surface) -> None:
         self.group.draw(surface)
 
-    def set_text(self: Self, text: str) -> None:
-        self.status.set_text(text)
+    def set_message(self: Self, text: str) -> None:
+        self.status.set_message(text)
 
     def set_score(self:Self, score: int) -> None:
         self.status.set_score(score)

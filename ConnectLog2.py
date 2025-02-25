@@ -35,13 +35,18 @@
 # V look for installer. (pyinstaller, win advanced installer)
 # V put in github
 # To implement (somewhat prioritized):
-# - make browser game (pygbag, replit.com?)
-# - lines connecting marked tiles, which makes it easier to unmark (see original game)
+# V lines connecting marked tiles, which makes it easier to unmark (see original game), the use of "background" makes it more sluggish. It might be improved by a sprite per connection
+# V animation on changes in board (primitive: no shifting tiles, just wait before changing board)
+# V save game status
+# V bug: handle end of game better. Empty grid.json (should be removed), hiscore not shown, handling of user input is dodgy.
+# V improvement: when stopping ask whether to save.
+# V drag back to undo marking.
+# ***** nice upgrade ******* V1.1, Maybe first see if connection sprites are faster than full background
 # - help window (like test above, but more elaborated)
-# - animation on changes in board
-# - settings: difficulty, level of animation, colors
+# - make browser game (pygbag, replit.com? with db-interface)
+# - settings: difficulty, level of animation, colors, username
 # - hiscore (local and via service, but then users are needed?), make a separate Data module to save the hiscore
-# - nicer graphics, also the status pane or hiscore
+# - nicer graphics, also the status pane and hiscore
 
 
 PYGAME_HIDE_SUPPORT_PROMPT = 1

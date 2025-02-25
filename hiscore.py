@@ -54,7 +54,7 @@ class HiScore:
                     sc = Score(int(j['points']), int(j['tile']), j['user'], j['datetime'])
                     self.__scores.append(sc)
             self.__scores.sort(key=lambda s: s.points, reverse = True)
-        except (KeyError, ValueError):
+        except (KeyError, ValueError, TypeError):
             self.__scores = []
             os.remove(p)
         except FileNotFoundError:
@@ -87,7 +87,7 @@ class HiScore:
         self.display(score)
         return True
 
-    def display(self: Self, new_score: Score | None = None) -> None:
+    def display(self: Self, new_score: Score | None = None) -> bool:
         print("Hiscore top 10")
         for i, s in enumerate(self.__scores):
             print(f'{i+1:2} - score: {s.points:15n}, tile: {s.highest_tile:2}, time: {s.datetime}, user: {s.user}')
@@ -130,14 +130,14 @@ class HiScore:
         text_rect.left = 5
         self.screen.blit(text, text_rect)
 
-
-
         pygame.display.flip()
         waiting = True
         while waiting:
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return True
                 if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                    waiting = False
+                    return False
 
 
 

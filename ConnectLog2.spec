@@ -5,7 +5,7 @@ a = Analysis(
     ['ConnectLog2.py'],
     pathex=[],
     binaries=[],
-    datas=[('README.txt', '.'), ('images/Tile1-small.png', 'images')],
+    datas=[('README.md', '.'), ('images/Tile1-small.png', 'images')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
