@@ -41,19 +41,19 @@
 # V bug: handle end of game better. Empty grid.json (should be removed), hiscore not shown, handling of user input is dodgy.
 # V improvement: when stopping ask whether to save.
 # V drag back to undo marking.
-# ***** nice upgrade ******* V1.1, Maybe first see if connection sprites are faster than full background
-# - help window (like test above, but more elaborated)
-# - make browser game (pygbag, replit.com? with db-interface)
+# ***** nice upgrade ******* V1.1, Maybe the last because at the moment, it's impractical to distribute the game. Maybe replit is the solution.
+# - help/intro window (like test above, but more elaborated) Intro is acceptable, only a few help pages should be added
+# - make browser game (pygbag, replit.com? with db-interface (replit.com apparently is very slow and dragging now is already not smooth enough))
 # - settings: difficulty, level of animation, colors, username
 # - hiscore (local and via service, but then users are needed?), make a separate Data module to save the hiscore
-# - nicer graphics, also the status pane and hiscore
+# - nicer graphics and animations, also the status pane and hiscore
 
 
 PYGAME_HIDE_SUPPORT_PROMPT = 1
 
 import pygame
 from game_play import Gameplay
-from about_help import Version
+from intro_about_help import IntroPage, Version, IntroPage
 import os 
 
 def main() :
@@ -66,8 +66,14 @@ def main() :
     programIcon = pygame.image.load(os.path.join(dir_path, 'images', 'Tile1-small.png'))
     pygame.display.set_icon(programIcon)
 
-    gameplay: Gameplay = Gameplay()
-    gameplay.play()
+    screen_width = 420
+    screen_height = 640
+    screen: pygame.Surface = pygame.display.set_mode((screen_width, screen_height))
+    intro: IntroPage = IntroPage(screen)
+    rc = intro.show()
+    if rc == IntroPage.Return.NEW or rc == IntroPage.Return.LOAD:
+        gameplay: Gameplay = Gameplay(screen)
+        gameplay.play(Gameplay.Start.NEW if rc == IntroPage.Return.NEW else Gameplay.Start.LOAD)
 
     print("Closing the application")
     pygame.quit()

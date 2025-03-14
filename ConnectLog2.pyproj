@@ -23,7 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="about_help.py" />
+    <Compile Include="intro_about_help.py" />
     <Compile Include="board.py" />
     <Compile Include="config.py" />
     <Compile Include="ConnectLog2.py" />

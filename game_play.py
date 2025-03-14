@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from itertools import filterfalse
+from turtle import width
 from typing import Self, Tuple
 from enum import Enum
 from copy import deepcopy
@@ -26,12 +27,14 @@ class TileRange:
 
 class Gameplay:
     NEW_TILE_RANGE_SIZE = 8
+    class Start(Enum):
+        NEW = 1
+        LOAD = 2
 
-    def __init__(self):
+
+    def __init__(self, screen: pygame.Surface):
         # the actual game window
-        screen_width = 420
-        screen_height = 640
-        self.screen: pygame.Surface = pygame.display.set_mode((screen_width, screen_height))
+        self.screen = screen
         self.__animation_delay_ms = 500
 
         # flag to end the game
@@ -51,18 +54,22 @@ class Gameplay:
         # put status under the board, filling up the space
         self.board_height = self.board.get_height()
         self.board_width = self.board.get_width()
-        self.status = StatusPane((0, self.board_height), (screen_width, screen_height - self.board_height))
+        self.status = StatusPane((0, self.board_height), (screen.get_width(), screen.get_height() - self.board_height))
 
         self.clock = pygame.time.Clock()
         self.mouse_checker: MouseEventChecker = MouseEventChecker(self.status)
 
     # the actual game loop
-    def play(self):
+    def play(self: Self, start):
 
         hiscore: HiScore = HiScore(Config.get_user(), self.screen)
 
         save_game : bool = False
-        self.grid.read()
+        if start == Gameplay.Start.LOAD:
+            self.grid.read()
+        else:
+            self.grid.remove_file()
+
         self.grid.refill(self.tile_range.low, self.tile_range.high, 0)
         self.score = self.calculate_score()
         self.handle_highest_number()

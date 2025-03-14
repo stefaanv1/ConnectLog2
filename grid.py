@@ -178,3 +178,7 @@ class Grid(object):
             os.remove(self.__get_filename())
         except Exception:
             pass # no real problem if file can't be removed. Probably already removed.
+
+    @staticmethod
+    def is_file_present() -> bool:
+        return os.path.isfile(Grid.__get_filename())
