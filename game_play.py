@@ -35,7 +35,7 @@ class Gameplay:
     def __init__(self, screen: pygame.Surface):
         # the actual game window
         self.screen = screen
-        self.__animation_delay_ms = 500
+        self.__animation_delay_ms = 300
 
         # flag to end the game
         self.running = True

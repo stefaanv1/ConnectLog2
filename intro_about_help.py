@@ -50,7 +50,7 @@ class IntroPage:
         group.add(tile3)
         group.draw(self.image)
 
-        font = pygame.font.Font(None, 30)
+        font = pygame.font.Font(None, 24)
         option_text: str = "New game, Load saved game, Help <N/L/H>" if Grid.is_file_present() else "New game, Help <N/H>"
         text: pygame.Surface = font.render(option_text, True, "darkblue")
         text_rect: pygame.Rect = text.get_rect()
