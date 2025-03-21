@@ -34,14 +34,14 @@ class Status(pygame.sprite.Sprite):
         text_rect.left = 5
         self.image.blit(text, text_rect)
 
-        sc : str = f'Score: {self.score:n} ({int(log2(max(1, self.score)))})'
+        sc : str = f'Score: {self.score:n} (>2^{int(log2(max(1, self.score)))})'
         text = font.render(sc, True, self.font_color)
         text_rect = text.get_rect()
         text_rect.top  = 35
         text_rect.left = 5
         self.image.blit(text, text_rect)
 
-        ht : str = f'Highest tile: {2 ** self.highest_tile:n} (2^{self.highest_tile})'
+        ht : str = f'Highest tile: {2 ** self.highest_tile:n} (=2^{self.highest_tile})'
         text = font.render(ht, True, self.font_color)
         text_rect = text.get_rect()
         text_rect.top  = 68
@@ -61,7 +61,7 @@ class Status(pygame.sprite.Sprite):
         self._draw_sprite()
 
 class StatusPane:
-    def __init__(self: Self, pos: Tuple[int, int], size: Tuple[int, int], font_color: str = "thistle4", bg_color: str = "ivory"): 
+    def __init__(self: Self, pos: Tuple[int, int], size: Tuple[int, int], font_color: str = "thistle4", bg_color: str = "paleturquoise"): 
         super().__init__() 
         self.status = Status(pos, size, font_color, bg_color)
         self.group = pygame.sprite.Group()
